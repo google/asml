@@ -1,0 +1,69 @@
+syntax = "proto2";
+
+package security.asml;
+
+import "storage/datapol/annotations/proto/semantic_annotations.proto";
+
+enum ControlDomain {
+  UNKNOWN = 0;
+  WEB_FRONTEND = 1;
+  WEB_BACKEND = 2;
+  AI = 3;
+  UNTRUSTED_WORKLOADS = 4;
+  MEMORY_SAFETY = 5;
+  CRYPTO = 6;
+  MOBILE = 7;
+  CLOUD = 8;
+  AUTH = 9;
+  DETECTION_AND_RESPONSE = 10;
+  // ...
+}
+
+enum ControlLevel {
+  MINIMAL = 0;
+  BASIC = 1;
+  ADVANCED = 2;
+  EXPERT = 3;
+  EMERGING = 4;
+}
+
+message ASMLReference {
+  message Signal {
+    optional string ref = 1;
+  }
+  message Web {
+    optional string url = 1;
+    optional bool internal = 2;
+  }
+  message Ticket {
+    optional int64 issue_id = 1;
+  }
+
+  oneof reference {
+    Web web = 1;
+    Signal signal = 3;
+    Ticket ticket = 4;
+  }
+}
+
+message ASMLControl {
+  optional string id = 1;
+  optional ControlLevel level = 2;
+  repeated ControlDomain domains = 3;
+  optional string control = 4;
+  optional string description = 5;
+  optional string reason = 6;
+  optional string category = 7;
+  repeated string owner = 8 [
+    (datapol.semantic_type) = ST_USERNAME,
+    (datapol.qualifier) = { is_google: true }
+  ];
+  repeated ASMLReference references = 9;
+  // YYYY-MM-DD format
+  optional string date_added = 10;
+  optional string date_modified = 11;
+}
+
+message ASMLControlList {
+  repeated ASMLControl asml_controls = 1;
+}

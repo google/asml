@@ -1,0 +1,248 @@
+# proto-file: security/ise_ob/asml/asml.proto
+# proto-message: ASMLControlList
+# go/asml-proto:web
+
+asml_controls: {
+  id: "WEB.E.1"
+  level: MINIMAL
+  domains: WEB_FRONTEND
+  control: "Redirect any traffic from HTTP to HTTPS"
+  description: "Web applications and services processing sensitive data must ensure they encrypt data in transit. This should include any sites which allow authentication or directly link to sensitive data."
+  category: "Encryption"
+  date_added: "2023-11-30"
+  date_modified: "2023-11-30"
+}
+
+asml_controls: {
+  id: "WEB.E.2"
+  level: MINIMAL
+  domains: WEB_FRONTEND
+  control: "Include the Strict-Transport-Security header with a long max-age value."
+  description: "Setting the Strict-Transport-Security header ensures strong encryption-in-transit for the application; it protects users from interacting with unencrypted endpoints and prevents attacks based on leaking sensitive data over the network."
+  category: "Encryption"
+  date_added: "2023-11-30"
+  date_modified: "2023-11-30"
+}
+
+asml_controls: {
+  id: "WEB.E.3"
+  level: EXPERT
+  domains: WEB_FRONTEND
+  control: "Use the includeSubdomains attribute in the Strict-Transport-Security header."
+  description: "If this flag is set, all of your site's subdomains will only be accessible over HTTPS. This makes person-in-the-middle attacks more difficult and protects users from phishing because a network-level attacker will not be able to forge any HTTP traffic within the entire application domain."
+  category: "Encryption"
+  date_added: "2023-11-30"
+  date_modified: "2023-11-30"
+}
+
+asml_controls: {
+  id: "WEB.SH.1"
+  level: MINIMAL
+  domains: WEB_FRONTEND
+  control: "Limit the ability to iframe the application by enabling application-wide framing controls with X-Frame-Options or CSP frame-ancestors."
+  description: "The ability to iframe another web application allows the embedder to force the user to interact with the embedded application in unexpected ways. This enables attacks such as clickjacking and XS-Leaks which allow another site to edit or reveal data from the iframe. By limiting the ability for the site to be iframed, we can prevent such attacks. For further information see."
+  category: "Security Headers"
+  references: [
+    { web: { url: "https://web.dev/security-headers/#xfo" } }
+  ]
+  date_added: "2023-11-30"
+  date_modified: "2023-11-30"
+}
+
+asml_controls: {
+  id: "WEB.SH.2"
+  level: ADVANCED
+  domains: WEB_FRONTEND
+  control: "Limit the capabilities of any cross-origin frames used within your application by using the iframe sandbox attribute with a minimally-permissive configuration."
+  description: "Including untrusted iframes allows the embeddee to execute a number of attacks on the embedding document, such as navigating it to a different destination, showing prompts or downloading files that the user is likely to attribute to the top-level page. Applying the sandbox attribute limits the iframe's capabilities and protects the parent page from attacks by embedded content."
+  category: "Security Headers"
+  date_added: "2023-11-30"
+  date_modified: "2023-11-30"
+}
+
+asml_controls: {
+  id: "WEB.SH.3"
+  level: MINIMAL
+  domains: WEB_FRONTEND
+  control: "Set a minimally permissive Content Security Policy."
+  description: "Content Security Policy is a mechanism designed to make applications more secure against common web vulnerabilities, particularly cross-site scripting (XSS). By adopting strict policies which prevent the loading of untrusted scripts, we can add important defense-in-depth layers and increase the barrier for exploitation of XSS bugs."
+  category: "Security Headers"
+  references: [
+    { web: { url: "https://web.dev/strict-csp/" } }
+  ]
+  date_added: "2023-11-30"
+  date_modified: "2023-11-30"
+}
+
+asml_controls: {
+  id: "WEB.SH.4"
+  level: BASIC
+  domains: WEB_FRONTEND
+  control: "Implement basic strict Content Security Policy based on nonces or hashes."
+  description: "Extending your Content Security Policies with nonces or hashes ensures explicit trust in loaded scripts, locks down additional attack vectors and blocks any additional scripts from being loaded in case of an injection bug, providing a mitigation against cross-site scripting."
+  category: "Security Headers"
+  references: [
+    { web: { url: "https://web.dev/strict-csp/" } }
+  ]
+  date_added: "2023-11-30"
+  date_modified: "2023-11-30"
+}
+
+asml_controls: {
+  id: "WEB.SH.5"
+  level: ADVANCED
+  domains: WEB_FRONTEND
+  control: "Implement a more restrictive nonce-only or hash-only eval()-free Content Security Policy without the 'strict-dynamic' or 'unsafe-eval' keywords."
+  description:
+    "The 'strict-dynamic' and 'unsafe-eval' help you adopt CSP by relaxing the security properties of your policy. To provide a more robust protection against cross-site scripting, deploy a CSP without these keywords."
+    "- Removing 'strict-dynamic' will protect your application from injections into the URLs of dynamically created script elements."
+    "- Removing 'unsafe-eval' will protect your application from injections into eval() and related APIs that take a string argument and executes it as a script."
+  category: "Security Headers"
+  references: [
+    { web: { url: "https://speakerdeck.com/lweichselbaum/csp-a-successful-mess-between-hardening-and-mitigation?slide=30" } }
+  ]
+  date_added: "2023-11-30"
+  date_modified: "2023-11-30"
+}
+
+asml_controls: {
+  id: "WEB.SH.6"
+  level: BASIC
+  domains: WEB_FRONTEND
+  control: "Enable Cross-Origin Opener Policy (COOP)"
+  description: "An attacker's website can open another application in a popup window, which can give it the ability to abuse cross-site leaks and reveal information about the user's data in the victim application. COOP provides a way for a window to isolate itself from cross-origin documents, preventing them from obtaining a reference to the window and interacting with it."
+  category: "Security Headers"
+  references: [
+    { web: { url: "https://web.dev/security-headers/#coop" } }
+  ]
+  date_added: "2023-11-30"
+  date_modified: "2023-11-30"
+}
+
+asml_controls: {
+  id: "WEB.SH.7"
+  level: BASIC
+  domains: WEB_FRONTEND
+  control: "Limit the use of any cross-origin communication mechanisms (such as postMessage or CORS) to a restrictive allowlist of trusted origins."
+  description:
+    "Cross origin communication mechanisms such as postMessage or Cross-Origin Resource Sharing (CORS) allow applications to exchange data with other websites they trust. However, they also introduce the ability to create overly broad allowlists of trusted entities and accidentally expose sensitive data to malicious websites."
+    "To protect your application, limit CORS interactions to a restrictive allowlists of trusted sites, specify the origin that a postMessage is being sent to (avoid the '*' wildcard), and always verify the origin a message is received from. In particular, be mindful of any allowlisting logic which makes use of regular expressions, as their flexibility makes it easy to accidentally add unwanted entries to the allowlist."
+  category: "Security Headers"
+  date_added: "2023-11-30"
+  date_modified: "2023-11-30"
+}
+
+asml_controls: {
+  id: "WEB.SH.8"
+  level: ADVANCED
+  domains: WEB_FRONTEND
+  control: "Implement resource-level protections by using a Fetch Metadata resource isolation policy or enabling Cross-Origin Resource Policy (CORP) for all resources."
+  description:
+    "Many cross-site attacks are possible because the web is open by default and allows many kinds of cross-site interactions such as iframing or directly loading resources such as images or scripts. This leads to web vulnerabilities such as CSRF, XSSI, timing attacks, and cross-origin information leaks."
+    "Adopting Fetch Metadata resource isolation policy or CORP restricts cross-origin interactions by default and locks down the use of your application's responses to only your application, mitigating most common cross-site vulnerabilities."
+  category: "Security Headers"
+  references: [
+    { web: { url: "https://web.dev/security-headers/#corp" } }
+  ]
+  date_added: "2023-11-30"
+  date_modified: "2023-11-30"
+}
+
+asml_controls: {
+  id: "WEB.SH.9"
+  level: EXPERT
+  domains: WEB_FRONTEND
+  control: "Enable Trusted Types"
+  description: "DOM-based cross-site scripting (DOM XSS) is one of the most common web security vulnerabilities. Trusted Types a robust protection against DOM XSS by locking down dangerous DOM APIs (such as innerHTML or eval()) and allowing their use only if provided a special object (a \"trusted type\")."
+  category: "Security Headers"
+  references: [
+    { web: { url: "https://web.dev/trusted-types/" } }
+  ]
+  date_added: "2023-11-30"
+  date_modified: "2023-11-30"
+}
+
+asml_controls: {
+  id: "WEB.SM.1"
+  level: MINIMAL
+  domains: WEB_FRONTEND
+  control: "Mark authentication cookies with the Secure attribute."
+  description: "To ensure that cookies are also only transmitted via encrypted and integrity protected channels, cookies must use the Secure attribute."
+  category: "Session Management"
+  date_added: "2023-11-30"
+  date_modified: "2023-11-30"
+}
+
+asml_controls: {
+  id: "WEB.SM.2"
+  level: BASIC
+  domains: WEB_FRONTEND
+  control:
+    "Enable additional security features for authentication cookies, including:"
+    "- The HttpOnly attribute"
+    "- The SameSite=Lax attribute"
+  description: "The HttpOnly attribute prevents JavaScript from accessing the cookie, which protects session cookies from being stolen in the event of a cross-site scripting bug. The SameSite=Lax attribute will prevent sending cookies by default in cross-domain requests, while still allowing them to be sent on top-level navigations. This provides a robust protection from cross-site request forgery attacks which doesn't require making substantial application-level changes."
+  category: "Session Management"
+  references: [
+    { web: { url: "https://web.dev/samesite-cookies-explained" } }
+  ]
+  date_added: "2023-11-30"
+  date_modified: "2023-11-30"
+}
+
+asml_controls: {
+  id: "WEB.SM.3"
+  level: BASIC
+  domains: WEB_FRONTEND
+  control: "Protect all state-changing actions by using CSRF tokens, double-submit cookies or an equivalent mechanism."
+  description: "Cross-site request forgery is a type of vulnerability which allows an attacker to perform an action on behalf of the user in another application by sending cross-site requests to the application, authenticated with the user's cookies. To prevent vulnerabilities of this type, applications need a protection against XSRF that ensures that a state-changing request has been issued by the application itself."
+  category: "Session Management"
+  date_added: "2023-11-30"
+  date_modified: "2023-11-30"
+}
+
+asml_controls: {
+  id: "WEB.TPS.1"
+  level: BASIC
+  domains: WEB_FRONTEND
+  control: "Ensure the integrity of client-side code by loading scripts from an origin controlled by your application or using Subresource Integrity (SRI) for static external scripts."
+  description: "Loading third-party scripts may be dangerous because it grants the provider of the script unconstrained access to user data in the application loading the script. We can ensure the integrity of client-side code by loading scripts from an origin controlled by the application or by using Subresource Integrity, which allows checking the cryptographic hash of an external script to ensure it has not been modified."
+  category: "Third-Party Scripts"
+  date_added: "2023-11-30"
+  date_modified: "2023-11-30"
+}
+
+asml_controls: {
+  id: "WEB.UDP.1"
+  level: BASIC
+  domains: WEB_FRONTEND
+  control: "Use an autoescaping HTML templating system for HTML responses."
+  description: "A common source of cross-site scripting bugs is directly concatenating user-controlled data with the HTML produced by the application. This is an error-prone pattern because it requires applying the appropriate type of escaping to all data outside of the application's control. Autoescaping HTML templating systems automatically apply correct escaping to all interpolated data and prevent injection vulnerabilities."
+  category: "User Data Processing"
+  date_added: "2023-11-30"
+  date_modified: "2023-11-30"
+}
+
+asml_controls: {
+  id: "WEB.UDP.2"
+  level: BASIC
+  domains: WEB_FRONTEND
+  control: "Use an industry-accepted HTML sanitizer to process any user-controlled HTML content."
+  description: "It is common for applications to give users the capability to produce including links, images and other markup. However, if it's not carefully sanitized, such content can easily lead to cross-site scripting. It's difficult to correctly sanitize HTML to ensure the absence of dangerous markup; using a robust, battle-tested HTML sanitizer allows you to to display user-provided rich text while preventing XSS."
+  category: "User Data Processing"
+  date_added: "2023-11-30"
+  date_modified: "2023-11-30"
+}
+
+asml_controls: {
+  id: "WEB.UDP.3"
+  level: BASIC
+  domains: WEB_FRONTEND
+  control: "Serve user-controlled files with appropriate protections (use a separate file hosting domain, or enable HTTP headers matching the approach from Securely Hosting User Data in Modern Web Applications)."
+  description:
+    "Serving untrusted data from your application's origin (such as any files uploaded by users) is a common source of stored cross-site scripting vulnerabilities. Somewhat unexpectedly, this applies also to serving file formats that aren't usually expected to be able to execute scripts, such as images, plaintext, or other formats such as CSV - web browsers can then interpret such responses as active content and allow them to execute scripts in the context of their hosting domain."
+    "Exercise particular care when serving files uploaded by users and apply one of the robust battle-tested solutions such as hosting files on a separate domain."
+  category: "User Data Processing"
+  date_added: "2023-11-30"
+  date_modified: "2023-11-30"
+}
