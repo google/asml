@@ -1,6 +1,4 @@
-# proto-file: security/ise_ob/asml/asml.proto
 # proto-message: ASMLControlList
-# go/asml-proto:web
 
 asml_controls: {
   id: "WEB.E.1"

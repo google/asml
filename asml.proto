@@ -2,8 +2,6 @@ syntax = "proto2";
 
 package security.asml;
 
-import "storage/datapol/annotations/proto/semantic_annotations.proto";
-
 enum ControlDomain {
   UNKNOWN = 0;
   WEB_FRONTEND = 1;
@@ -54,10 +52,7 @@ message ASMLControl {
   optional string description = 5;
   optional string reason = 6;
   optional string category = 7;
-  repeated string owner = 8 [
-    (datapol.semantic_type) = ST_USERNAME,
-    (datapol.qualifier) = { is_google: true }
-  ];
+  repeated string owner = 8;
   repeated ASMLReference references = 9;
   // YYYY-MM-DD format
   optional string date_added = 10;
